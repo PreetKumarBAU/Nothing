@@ -1,0 +1,440 @@
+<?xml version="1.0"?>
+
+<odoo>
+    <data>
+            <!-- explicit list/Tree view definition -->
+    <record model="ir.ui.view" id="sla_rule_tree_view">
+      <field name="name">SLA Rule </field>
+      <field name="model">sla.rule</field>
+         <field name="priority">20</field>
+      <field name="arch" type="xml">
+        <tree>
+
+          <field name="name"/>
+          <field name="project_task_category_id"/>
+          <field name="timesheet_type"/>
+            <field name="sla_time"/>
+            <field name="warning"/>
+<!--            <field name="time_spent"/>-->
+          <field name="sla_status" invisible="1" />
+        </tree>
+
+      </field>
+    </record>
+
+            <!-- explicit Form view definition -->
+
+
+            <!--form view of the patient model-->
+<!--    <record id="sla_rule_form_view" model="ir.ui.view">-->
+<!--        <field name="name">sla.rule.form.view</field>-->
+<!--        <field name="model">sla.rule</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form string="SLA Rule Form">-->
+<!--                <header>-->
+<!--                    <button name="%(om_hospital.create_appointment_wizard)d" string="Create Appointment" type="action"-->
+<!--                            class="oe_highlight" context="{'default_patient_id': active_id}"/>-->
+<!--                    <button name="print_report" type="object" string="Print" class="oe_highlight"/>-->
+<!--                    <button name="action_send_card" type="object"  string="Send By Email" class="oe_highlight"-->
+<!--                            groups="om_hospital.group_hospital_manager"/>-->
+<!--                </header>-->
+<!--                <sheet>-->
+<!--                    <div class="oe_button_box" name="button_box">-->
+<!--                        <button name="open_patient_appointments" class="oe_stat_button" type="object" icon="fa-calendar">-->
+<!--                            <field string="Appointments" name="appointment_count" widget="statinfo"/>-->
+<!--                        </button>-->
+<!--                        <button name="%(open_patient_appointments)d" class="oe_stat_button" type="action" icon="fa-usd">-->
+<!--                            <field string="Appointments" name="appointment_count" widget="statinfo"/>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                     <field name="image" widget="image" class="oe_avatar"/>-->
+<!--                     <div class="oe_title">-->
+<!--                        <h1>-->
+<!--                            <field name="patient_name"/>-->
+<!--                        </h1>-->
+<!--                    </div>-->
+<!--                    <group>-->
+<!--                        <group>-->
+<!--                            <field name="patient_name_upper" groups="base.group_no_one"/>-->
+<!--                            <field name="patient_age" options='{"type": "number", "step": 10}'/>-->
+<!--                            <field name="patient_age2" widget="float_toggle" options='{"range": [0, 1, 2, 3, 4, 5, 6, 7,  8, 9, 10, 11]}'/>-->
+<!--                            <field name="gender"/>-->
+<!--                            <field name="doctor_id" attrs="{'invisible': [('gender','!=', 'male')]}"-->
+<!--                                   options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"/>-->
+<!--                            <field name="doctor_gender"/>-->
+<!--                            <field name="user_id"/>-->
+<!--                            &lt;!&ndash;<field name="xml_id"/>&ndash;&gt;-->
+<!--                        </group>-->
+<!--                        <group>-->
+<!--                            <field name="name" groups="om_hospital.group_hospital_manager"/>-->
+<!--                            <field name="email_id"/>-->
+<!--                            <field name="age_group"/>-->
+<!--                            <field name="name_seq" readonly="1"/>-->
+<!--                            <field name="company_id" groups="base.group_multi_company"/>-->
+<!--                        </group>-->
+<!--                    </group>-->
+<!--                    <group>-->
+<!--                        <field name="notes"/>-->
+<!--                    </group>-->
+<!--                </sheet>-->
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids" widget="mail_followers"/>-->
+<!--                    <field name="activity_ids" widget="mail_activity"/>-->
+<!--                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record model="ir.ui.view" id="sla_rule_form_view">
+      <field name="name">SLA Rule </field>
+      <field name="model">sla.rule</field>
+         <field name="priority">1</field>
+      <field name="arch" type="xml">
+           <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sla_time"/>
+                             <field name="warning"/>
+                        </group>
+                        <group>
+                            <field name="project_task_category_id" string=" Task Category"/>
+                            <field name="timesheet_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- explicit Search view definition , Filter and GROUP BY -->
+    <record model="ir.ui.view" id="sla_rule_search_view">
+      <field name="name">SLA Rule Search View </field>
+      <field name="model">sla.rule</field>
+         <field name="priority">1</field>
+      <field name="arch" type="xml">
+      <search string="SLA Rule Type">
+          <field name="name"/>
+          <field name="project_task_category_id"/>
+          <field name="timesheet_type"/>
+
+  <!--  <filter name="name" string=" Project Task Categories" domain="[('name', '=', )]"/>-->
+        <group expand="0" string="Group By">
+            <filter string="SLA Rule " name="groupby_sla_rule" domain="[]" context="{'group_by': 'name'}"/>
+        </group>
+
+      </search>
+
+      </field>
+    </record>
+
+
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="sla_rule_action_window">
+      <field name="name"> SLA Rule Type</field>
+      <field name="res_model">sla.rule</field>
+      <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="sla_rule_tree_view"/>
+        <field name="search_view_id" ref="sla_rule_search_view"/>
+    </record>
+
+
+        <!-- Menu for SLA Rule Type -->
+    <menuitem name="SLA Rule " id="sla_rule_menu" parent="project.menu_project_config"  action ="sla_rule_action_window" />
+
+
+<!--        -->
+<!--&lt;!&ndash;    Form for the SLA Rule from account.analytic.line model &ndash;&gt;-->
+<!--    <record model="ir.ui.view" id="account_analytic_line_form_in_sla_rule_page">-->
+
+<!--        <field name="name">account.analytic.line.form.in.sla.rule.page</field>-->
+<!--        <field name="model">account.analytic.line</field>-->
+<!--        <field name="arch" type="xml">-->
+
+<!--            <form>-->
+<!--                    -->
+<!--                     <field name="sla_status" />-->
+<!--                    <field name="time_spent"/>-->
+<!--                    <field name="warning"/>-->
+
+<!--            </form>-->
+
+
+<!--        </field>-->
+<!--    </record>-->
+
+<!--&lt;!&ndash;    List View for the SLA Rule from account.analytic.line model &ndash;&gt;-->
+<!--    <record model="ir.ui.view" id="account_analytic_line_tree_view_in_sla_rule_page">-->
+
+<!--        <field name="name">account.analytic.line.tree.view.in.sla.rule.page</field>-->
+<!--        <field name="model">account.analytic.line</field>-->
+<!--        <field name="arch" type="xml">-->
+
+
+<!--            <tree>-->
+<!--                     <field name="sla_status" decoration-success="sla_status == 'Within SLA'"  decoration-danger="sla_status == 'Breach SLA'" decoration-bf="1"/>-->
+<!--                    <field name="time_spent"/>-->
+<!--                    <field name="warning"/>-->
+<!--            </tree>-->
+
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--&lt;!&ndash;    Form for the SLA Rule Page&ndash;&gt;-->
+<!--    <record model="ir.ui.view" id="sla_rule_form_view">-->
+
+<!--        <field name="name">sla.rule.form</field>-->
+<!--        <field name="model">sla.rule</field>-->
+<!--        <field name="arch" type="xml">-->
+
+<!--            <form>-->
+<!--                    <field name="sla_rule_name"/>-->
+<!--                    <field name="timesheet_type"/>-->
+<!--                <field name="analytic_account_line_ids" context="{'form_view_ref': 'account_analytic_line_form_in_sla_rule_page' }" />-->
+<!--                    <field name="sla_time"/>-->
+
+
+<!--            </form>-->
+
+
+
+<!--&lt;!&ndash;            </field>&ndash;&gt;-->
+
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--        &lt;!&ndash;    Tree View for the SLA Rule Page&ndash;&gt;-->
+<!--    <record model="ir.ui.view" id="sla_rule_tree_view">-->
+
+<!--        <field name="name">sla.rule.form</field>-->
+<!--        <field name="model">sla.rule</field>-->
+<!--        <field name="arch" type="xml">-->
+
+<!--            <tree>-->
+<!--                <field name="sla_rule_name"/>-->
+<!--                <field name="timesheet_type"/>-->
+<!--                <field name="sla_time"/>-->
+<!--                <field name="analytic_account_line_ids" context="{'tree_view_ref': 'account_analytic_line_tree_view_in_sla_rule_page' }" />-->
+
+<!--            </tree>-->
+
+<!--&lt;!&ndash;            </field>&ndash;&gt;-->
+
+<!--        </field>-->
+<!--    </record>-->
+
+
+        <!--  list/Tree view for the SLA Page in Project -->
+    <record model="ir.ui.view" id="sla_rule_tree_view1">
+      <field name="name">SLA Rule </field>
+      <field name="model">sla.rule</field>
+         <field name="priority">1</field>
+      <field name="arch" type="xml">
+        <tree>
+          
+<!--          <field name="sla_rule_name"/>-->
+<!--          <field name="project_task_category_id"/>-->
+          <field name="timesheet_type"/>
+            <field name="sla_time"/>
+            <field name="time_spent"/>
+          <field name="sla_status"/>
+
+        </tree>
+
+      </field>
+    </record>
+    <record id="hr_timesheet_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.timesheet.tree.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="arch" type="xml">
+           <tree>
+
+           </tree>
+
+        </field>
+    </record>
+
+
+
+<!--project.act_project_project_2_project_task_all
+[('display_project_id', '=', active_id)]
+{  'pivot_row_groupby': ['user_ids'],   'default_project_id': active_id,  'show_project_update': True,   }-->
+
+        
+ <!--  Timesheet Filtered Tree View in the SLA Page BUtton in Project Module -->
+    <record model="ir.ui.view" id="Timesheet_Filtered_tree_view1">
+      <field name="name"> Timesheet Filtered Tree View </field>
+      <field name="model">account.analytic.line</field>
+<!--         <field name="priority">1</field>-->
+
+      <field name="arch" type="xml">
+
+                        <tree editable="bottom" string="Timesheet Activities" default_order="date" >
+                            <field name="date"/>
+                            <field name="user_id" invisible="1"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
+                            <field name="name" required="0"/>
+                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
+                            <field name="project_id" />
+<!--                            <field name="task_id"  domain="[ ('task_id', '=', company_id) ,  ('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]" />-->
+                            <field name="company_id" invisible="1"/>
+                            <field name="state" />
+                        </tree>
+      </field>
+    </record>
+<!--                   <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">-->
+
+
+<!--        Action to a Button in SLA Rule Page in Project Module to get Approved Records -->
+        <record id="timesheet_view_filtered" model="ir.actions.act_window">
+        <field name="name">Approved Timesheet View </field>
+<!--        <field name="src_model">res.partner</field>-->
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="Timesheet_Filtered_tree_view1"/>
+<!--        <field name="search_view_id" ref="mail.view_message_search"/>-->
+
+<!--            <field name="context">{"default_project_id": active_id  , "default_task_id": active_id}</field>-->
+<!--          <field   context="{'default_project_id': project_id,   'default_name':''}" />-->
+            <field name="domain">[  ('state', '=', 'Approved')  ]</field>
+
+    </record>
+
+
+<!--Added SLA Rule Page -->
+
+    <record id="project_module_added_sla_page" model="ir.ui.view">
+        <field name="name">project.module.added.sla.page</field>
+        <field name="model">project.task</field>
+<!--        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='task_dependencies']" position="after">
+            <page string="SLA Rule" id="sla_page_id">
+                <group>
+                <group>
+                    <field name="overall_sla_time"  sum="Overall SLA Hours"/>
+                    <field name="overall_time_spent"  sum="Overall Hours Spent"/>
+                  <field name="state" invisible="True"/>
+                <field name="active" invisible="True"/>
+
+                </group>
+                <group> 
+                  <button type="object" string="Approved Timesheets"   name="get_approved"/> 
+
+                </group>
+                
+                    </group>
+<!--                <field name="project_id" />-->
+
+             
+                    <field name="sla_rule_ids" context="{  'tree_view_ref': 'sla_rule_tree_view1'}"/>
+<!--        <tree>-->
+
+<!--          <field name="sla_rule_name"/>-->
+<!--          <field name="project_task_category_id"/>-->
+<!--          <field name="timesheet_type"/>-->
+<!--            <field name="sla_time"/>-->
+<!--            <field name="warning" invisible="1" />-->
+<!--            <field name="time_spent"/>-->
+<!--          <field name="sla_status" />-->
+
+<!--        </tree>-->
+
+<!--<field name="sla_rule_ids" context="{'form_view_ref': 'sla_rule_form_view' ,  'tree_view_ref': 'sla_rule_tree_view'}">-->
+
+<!--                </field>-->
+
+
+
+<!--                <field name="analytic_account_line_ids"  >-->
+<!--                <tree>-->
+<!--                     <field name="sla_status" decoration-success="sla_status == 'Within SLA'"  decoration-danger="sla_status == 'Breach SLA'" decoration-bf="1"/>-->
+<!--                    <field name="time_spent"/>-->
+<!--                    <field name="warning"/>-->
+<!--                </tree>-->
+<!--                    <form>-->
+
+<!--                    </form>-->
+
+
+<!--                </field>-->
+
+
+<!--                <field name="sla_rule_id.sla_rule_name"/>-->
+<!--                <field name="sla_rule_id.sla_status"         decoration-success="sla_status == 'Within SLA'"  decoration-danger="sla_status == 'Breach SLA'" decoration-bf="1"/>-->
+<!--
+                <button name="select_accepted"   groups="hr_timesheet.group_timesheet_manager" string="Accept" type="object"    class="oe_highlight"  attrs="{'invisible': [( 'state' , '=' , 'Approved')] }"> <field name="state" readonly="True" force_save="1"/> </button>-->
+<!--                <button name="select_rejected"   groups="hr_timesheet.group_timesheet_manager" string="Reject" type="object"  class="oe_highlight"   attrs="{'invisible': [( 'state' , '=' , 'Rejected' )] }" > <field name="state" readonly="True" force_save="1"/> </button>-->
+            </page>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    </data>
+</odoo>
+
+
+<!--                        <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">-->
+<!--                            <field name="depend_on_ids" nolabel="1">-->
+<!--                                <tree editable="bottom">-->
+<!--                                    <field name="is_closed" invisible="1"/>-->
+<!--                                    <field name="name"/>-->
+<!--                                    <field name="project_id" optional="hide"/>-->
+<!--                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>-->
+<!--                                    <field name="company_id" optional="hide" groups="base.group_multi_company"/>-->
+<!--                                    <field name="activity_ids" widget="list_activity" optional="hide"/>-->
+<!--                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>-->
+<!--                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>-->
+<!--                                    <field name="kanban_state" widget="state_selection" optional="hide"/>-->
+<!--                                    <field name="stage_id" optional="show"/>-->
+<!--                                    <button class="oe_link float-right" string="View Task" name="action_open_task" type="object"/>-->
+<!--                                </tree>-->
+<!--                            </field>-->
+<!--                        </page>-->
+
+
+
+
+
+
+<!--                  <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">-->
+<!--                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id}">-->
+<!--                                <tree editable="bottom">-->
+<!--                                    <field name="project_id" invisible="1"/>-->
+<!--                                    <field name="is_closed" invisible="1"/>-->
+<!--                                    <field name="sequence" widget="handle"/>-->
+<!--                                    <field name="name"/>-->
+<!--                                    <field name="display_project_id" string="Project" optional="hide"/>-->
+<!--                                    <field name="partner_id" optional="hide"/>-->
+<!--                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>-->
+<!--                                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>-->
+<!--                                    <field name="activity_ids" widget="list_activity" optional="hide"/>-->
+<!--                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>-->
+<!--                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>-->
+<!--                                    <field name="kanban_state" widget="state_selection" optional="hide"/>-->
+<!--                                    <field name="stage_id" optional="show"/>-->
+<!--                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link pull-right"/>-->
+<!--                                </tree>-->
+<!--                            </field>-->
+<!--                        </page>-->
+
+
+
+
+
+<!--                        <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">-->
+<!--                            <div class="alert alert-warning" role="alert">-->
+<!--                                You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project.-->
+<!--                            </div>-->
+<!--                        </group>-->

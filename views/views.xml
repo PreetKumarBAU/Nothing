@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- actions for Timesheet Approval Menu -->
+    <record model="ir.actions.act_window" id="timesheet_approval_action_window">
+      <field name="name"> To Approve Timesheets</field>
+      <field name="res_model">account.analytic.line</field>
+      <field name="view_mode">tree,form,kanban,pivot,graph</field>
+        <field name="context">{"search_default_Submitted State":1} </field>
+    </record>
+
+        <!-- actions for Timesheet Type Menu -->
+    <record model="ir.actions.act_window" id="timesheet_type_action_window">
+      <field name="name"> Timesheet Type </field>
+      <field name="res_model">timesheet.type</field>
+      <field name="view_mode">tree,form,kanban,pivot,graph</field>
+
+
+    </record>
+
+        <!-- Menu for Approval timesheet-->
+    <menuitem name="To Approve Timesheet" id="timesheet_approval_menu" parent="hr_timesheet.menu_hr_time_tracking"  action ="timesheet_approval_action_window" />
+
+        <!-- Menu in COnfiguration called Timesheet Type-->
+    <menuitem name="Timesheet Type" id="timesheet_type_menu" parent="hr_timesheet.hr_timesheet_menu_configuration"  action ="timesheet_type_action_window" sequence="2"/>
+
+                <!-- Menu in COnfiguration called Settings -->
+    <menuitem name="Settings " id="timesheet_settings_menu" parent="hr_timesheet.hr_timesheet_menu_configuration"  action ="hr_timesheet.hr_timesheet_config_settings_action"  sequence="1" />
+
+
+
+
+        <!--  Add Timesheet Type  and  State Fields/Columns in the Timesheet Tree View  -->
+
+    <record id="hr_timesheet_added_timesheet_type" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit.timesheet_type_Added</field>
+        <field name="model">account.analytic.line</field>
+<!--        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="task_id" position="attributes">
+                    <attribute name="required">1</attribute>
+<!--                   <attribute name="readonly">1</attribute>-->
+            </field>
+            <xpath expr="//tree/field[@name='name']" position="after">
+
+                <field name="project_task_category_id" string="Task Category"  />
+                <field name="timesheet_type"/>
+                <field name="state"         decoration-success="state == 'Approved'" decoration-info="state == 'Submitted'"  decoration-danger="state == 'Rejected'" decoration-bf="1"/>
+                <button name="select_accepted"   groups="hr_timesheet.group_timesheet_manager" string="Accept" type="object"    class="oe_highlight"  attrs="{'invisible': [( 'state' , '=' , 'Approved')] }"> <field name="state" readonly="True" force_save="1"/> </button>
+                <button name="select_rejected"   groups="hr_timesheet.group_timesheet_manager" string="Reject" type="object"  class="oe_highlight"   attrs="{'invisible': [( 'state' , '=' , 'Rejected' )] }" > <field name="state" readonly="True" force_save="1"/> </button>
+
+<!--                    <field name="approval_timesheet" widget="toggle_button" options="{'range': [ 'Accepted', 'Rejected' ] }"/>-->
+<!--                    <field name="approval_timesheet" widget="float_toggle" options="{'range': [0, 1 ] }"/>-->
+<!--                    <field name="switch_approval" widget="FieldSelection"/>-->
+<!--                    <field name="Approve_timesheet" widget="boolean_toggle"/>-->
+<!--                    <field name="Reject_timesheet" widget="boolean_toggle"/>-->
+
+<!--                <button name="accept_timesheet" string="Accept" type="object" groups="base.group_user"  context="{'accepted_int':accepted_int , 'rejected_int':rejected_int}"/>-->
+
+            </xpath>
+<!--            <xpath expr="//field[@name='employee_id']" position="attributes">-->
+<!--                    <attribute name="invisible">0</attribute>-->
+<!--                    <attribute name="required">1</attribute>-->
+<!--                    <attribute name="widget">many2one_avatar_employee</attribute>-->
+<!--                </xpath>-->
+        </field>
+    </record>
+
+                <!-- View For All User or  Giving Field Rights for a Group  For the Timesheet Tree View  -->
+
+    <record id="hr_timesheet_Added_Group_based_rights_for_a_Field" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit.Added.Group.based.rights.for.a.Field</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="groups_id" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))  ,  (4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+
+        <field name="arch" type="xml">
+            <field name="state" position="attributes">
+                   <attribute name="readonly">1</attribute>
+            </field>
+
+<!--            <xpath expr="//tree/field[@name='timesheet_type']" position="after">-->
+<!--                <field name="state"  decoration-success= "state == 'Approved'" decoration-info="state == 'Submitted'"  decoration-danger="state == 'Rejected'" decoration-bf="1" options="{'no_create': True, 'no_open': True, 'no_edit': True, 'no_create_edit': True}"/>-->
+<!--            </xpath>-->
+
+        </field>
+    </record>
+
+
+
+
+
+<!--        Extending Search VIew with FILTERS and GROUP BY  -->
+
+    <record id="hr_timesheet_line_search_inherited_adding_filters" model="ir.ui.view">
+        <field name="name">hr.timesheet.line.search.inherited.adding.filters</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/filter[@name='mine']" position="after">
+
+                <filter name="Submitted State" string="Submitted State" domain="[('state','=','Submitted')]"  />
+                <filter name="Approved State" string="Approved State" domain="[('state','=','Approved')]"  />
+                <filter name="Rejected State" string="Rejected State" domain="[('state','=','Rejected')]"  />
+
+                <group string="Group By" >
+                     <filter name="Timesheet_type" string="Timesheet Type" context = "{'group_by': 'timesheet_type'}"  />
+                     <filter name="state" string="Timesheet State" context = "{'group_by': 'state'}"  />
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!-- explicit list view definition -->
+<!--    <record model="ir.ui.view" id="SLA.rule.type.view">-->
+<!--      <field name="name">SLA Rule Type View </field>-->
+<!--      <field name="model">sla.rule.type</field>-->
+<!--      <field name="arch" type="xml">-->
+<!--        <tree>-->
+<!--          <field name="name"/>-->
+<!--          <field name="acting"/>-->
+<!--          <field name="active"/>-->
+<!--        </tree>-->
+<!--      </field>-->
+<!--    </record>-->
+
+
+    <!-- actions opening views on models -->
+<!--    <record model="ir.actions.act_window" id="project.task.categories.action_window">-->
+<!--      <field name="name"> </field>-->
+<!--      <field name="code"> </field>-->
+<!--      <field name="res_model">task.category</field>-->
+<!--      <field name="view_mode">tree,form</field>-->
+<!--    </record>-->
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="custom/teckiting_system-main/modification.action_server">
+      <field name="name">custom/teckiting_system-main/Modification server</field>
+      <field name="model_id" ref="model_custom/teckiting_system-main/modification_custom/teckiting_system-main/modification"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+
+        <!--  Add Timesheet Type  and  State Fields/Columns in the Timesheet Page in Project Module  -->
+
+    <record id="project_module_added_timesheet_type_and_state" model="ir.ui.view">
+        <field name="name">project.module.added.timesheet.type.state</field>
+        <field name="model">project.task</field>
+<!--        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='name']" position="after">
+<!--                <field name="project_task_category_id" string="Task Category"  />-->
+                <field name="timesheet_type"/>
+                <field name="state"         decoration-success="state == 'Approved'" decoration-info="state == 'Submitted'"  decoration-danger="state == 'Rejected'" decoration-bf="1"/>
+<!--                <button name="select_accepted"   groups="hr_timesheet.group_timesheet_manager" string="Accept" type="object"    class="oe_highlight"  attrs="{'invisible': [( 'state' , '=' , 'Approved')] }"> <field name="state" readonly="True" force_save="1"/> </button>-->
+<!--                <button name="select_rejected"   groups="hr_timesheet.group_timesheet_manager" string="Reject" type="object"  class="oe_highlight"   attrs="{'invisible': [( 'state' , '=' , 'Rejected' )] }" > <field name="state" readonly="True" force_save="1"/> </button>-->
+
+
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+                <!-- View For All User or  Giving Field Rights for a Group  For the Timesheet Tree in Timesheet Page in Project Module for Task  -->
+    <record id="timesheet_page_inherited_tree_view_upgraded_Added_Group_based_rights_for_a_Field" model="ir.ui.view">
+        <field name="name">timesheet.page.inherited.tree.view.upgraded.Added.Group.based.rights.for.a.Field</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+        <field name="groups_id" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))  ,  (4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+
+        <field name="arch" type="xml">
+            <field name="state" position="attributes">
+                   <attribute name="readonly">1</attribute>
+            </field>
+<!--            <xpath expr="//tree/field[@name='timesheet_type']" position="after">-->
+<!--                <field name="state"  decoration-success= "state == 'Approved'" decoration-info="state == 'Submitted'"  decoration-danger="state == 'Rejected'" decoration-bf="1" options="{'no_create': True, 'no_open': True, 'no_edit': True, 'no_create_edit': True}"/>-->
+<!--            </xpath>-->
+
+        </field>
+    </record>
+
+
+  </data>
+</odoo>

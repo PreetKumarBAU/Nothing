@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+    <record model='ir.ui.menu' id='timesheet_approval_menu'>
+        <field name="groups_id" eval="[(4,ref('hr_timesheet.group_timesheet_manager'))]"/>
+    </record>
+
+
+<!--    &lt;!&ndash;     For Single User Timesheet Group &ndash;&gt;-->
+<!--&lt;!&ndash;    Edit Previous Rule and Made it Read Only and Removed other Access &ndash;&gt;-->
+<!--            <record id="timesheet_line_rule_user" model="ir.rule">-->
+<!--            <field name="name">account.analytic.line.timesheet.user</field>-->
+<!--            <field name="model_id" ref="analytic.model_account_analytic_line"/>-->
+<!--            <field name="domain_force">[-->
+<!--                ('user_id', '=', user.id),-->
+<!--                ('project_id', '!=', False),-->
+<!--                '|', '|',-->
+<!--                    ('project_id.privacy_visibility', '!=', 'followers'),-->
+<!--                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),-->
+<!--                    ('task_id.message_partner_ids', 'in', [user.partner_id.id])-->
+<!--            ]</field>-->
+<!--            <field name="groups" eval="[(4, ref('group_hr_timesheet_user'))]"/>-->
+
+<!--                <field name="perm_write" eval="False"/>-->
+<!--            <field name="perm_create" eval="False"/>-->
+<!--            <field name="perm_unlink" eval="False"/>-->
+<!--        </record>-->
+<!--    -->
+<!--    -->
+
+
+<!--    Delete Access Right Rule -->
+
+<!--    <delete model="ir.rule" id="sale.sale_order_see_all"/>-->
+
+
+
+    <!--   Apply Rules for the Particular Records which are selected via Domain Filter  -->
+
+
+<!--     For All User Timesheet Group -->
+    <!--    Edit Previous Rule and Made it Read Only and Removed other Access Rights-->
+
+            <record id="hr_timesheet.timesheet_line_rule_approver" model="ir.rule">
+            <field name="name">account.analytic.line.timesheet.approver</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line" />
+            <field name="domain_force">[
+                ('project_id', '!=', False),
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]" />
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+
+
+
+<!--     For All User Timesheet Group  AND   For Single User Timesheet GRoup-->
+    <!--   Given Read Only Access Rights for records where 'state' in ['Approved' , 'Rejected' ] -->
+        <record id="read_only_for_state_assigned_records" model="ir.rule">
+            <field name="name"> Timesheet User Group and Timesheet All User Group are given all Rights for state is 'Approved' and 'Rejected' records</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+
+            <field name="domain_force">[('state','in',['Approved' , 'Rejected' ] )  ]</field>
+
+            <field name="groups" eval="[  (4, ref('hr_timesheet.group_hr_timesheet_approver')) , (4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+
+<!--     For All User Timesheet Group  AND   For Single User Timesheet GRoup-->
+    <!--   Given All Access Rights for records where 'state' is 'Submitted'  -->
+        <record id="read_only_for_state_not_assigned_records" model="ir.rule">
+            <field name="name"> Timesheet User Group and Timesheet All User Group are able to Read 'Submitted' records</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+
+            <field name="domain_force">[('state','=', 'Submitted' )  ]</field>
+
+            <field name="groups" eval="[ (4, ref('hr_timesheet.group_hr_timesheet_approver')) , (4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+
+        </record>
+
+
+<!--     For Single User Timesheet Group -->
+<!-- Rewrite Builtin Rule by changing to ReadOnly Access instead of giving All Access Rights-->
+            <record id="hr_timesheet.timesheet_line_rule_user" model="ir.rule">
+            <field name="name">account.analytic.line.timesheet.user</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="domain_force">[
+                ('user_id', '=', user.id),
+                ('project_id', '!=', False),
+                '|', '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('task_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+
+
+                <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+
+</odoo>

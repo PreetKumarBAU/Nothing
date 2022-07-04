@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_task_category_readonly,modification.task_category_readonly,model_task_category,base.group_user,1,0,0,0
+access_task_category_allrights,modification.task_category_allrights,model_task_category,hr_timesheet.group_timesheet_manager,1,1,1,1
+
+access_timesheet_type_readonly,modification.timesheet_type_readonly,model_timesheet_type,base.group_user,1,0,0,0
+access_timesheet_type_allrights,modification.timesheet_type_allrights,model_timesheet_type,hr_timesheet.group_timesheet_manager,1,1,1,1

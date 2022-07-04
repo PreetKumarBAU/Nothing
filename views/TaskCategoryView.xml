@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="task_category_tree_view">
+      <field name="name">Task Category View </field>
+      <field name="model">task.category</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="code"/>
+        </tree>
+
+      </field>
+    </record>
+
+
+    <!-- explicit Search view definition -->
+    <record model="ir.ui.view" id="task_category_search_view">
+      <field name="name">Task Category Search View </field>
+      <field name="model">task.category</field>
+      <field name="arch" type="xml">
+      <search string="Task Categories">
+<!--        <field name="name"/>-->
+<!--        <field name="code"/>-->
+
+
+  <!--  <filter name="name" string=" Project Task Categories" domain="[('name', '=', )]"/>-->
+        <group string="Group By">
+            <filter name="groupby_task_category" string="Task Categories" context = "{'group_by': 'name'}"  />
+
+        </group>
+
+      </search>
+
+      </field>
+    </record>
+
+
+
+
+        <!--   Adding Task Category Field to the Project Task Form View -->
+
+    <record id="project_task_form_inherit_task_category_Added" model="ir.ui.view">
+        <field name="name">project.task.form.inherit.task.category.Added</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//form//group//group//field[@name='parent_id']" position="after">
+                <field name="project_task_category_id"/>
+<!--                <field name="so_line" widget="so_line_many2one" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}"/>-->
+            </xpath>
+<!--            <xpath expr="//field[@name='employee_id']" position="attributes">-->
+<!--                    <attribute name="invisible">0</attribute>-->
+<!--                    <attribute name="required">1</attribute>-->
+<!--                    <attribute name="widget">many2one_avatar_employee</attribute>-->
+<!--                </xpath>-->
+        </field>
+    </record>
+<!--        <record model="ir.ui.view" id="view_mail_tracking_value_tree">-->
+<!--            <field name="name">mail.tracking.value.tree</field>-->
+<!--            <field name="model">mail.tracking.value</field>-->
+<!--            <field name="priority">12</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree string="Tracking Value">-->
+<!--                    <field name="field"/>-->
+<!--                    <field name="old_value_integer"/>-->
+<!--                    <field name="old_value_float"/>-->
+<!--                    <field name="old_value_char"/>-->
+<!--                    <field name="old_value_text"/>-->
+<!--                    <field name="old_value_datetime"/>-->
+<!--                    <field name="new_value_integer"/>-->
+<!--                    <field name="new_value_float"/>-->
+<!--                    <field name="new_value_char"/>-->
+<!--                    <field name="new_value_text"/>-->
+<!--                    <field name="new_value_datetime"/>-->
+<!--                    <field name="mail_message_id"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="project_task_categories_action_window">
+      <field name="name"> Task Category </field>
+      <field name="res_model">task.category</field>
+      <field name="view_mode">tree,form,kanban,pivot,graph</field>
+        <field name="view_id" ref="task_category_tree_view"/>
+        <field name="search_view_id" ref="task_category_search_view"/>
+    </record>
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="custom/teckiting_system-main/modification.action_server">
+      <field name="name">custom/teckiting_system-main/Modification server</field>
+      <field name="model_id" ref="model_custom/teckiting_system-main/modification_custom/teckiting_system-main/modification"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="" id="custom/teckiting_system-main/modification.menu_root"/>
+-->
+
+    <!-- menu  -->
+    <menuitem name="Tasks Category" id="project_task_category_menu" parent="project.menu_project_config" action = "project_task_categories_action_window"/>
+
+
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="custom/teckiting_system-main/modification.menu_1_list" parent="custom/teckiting_system-main/modification.menu_1"
+              action="custom/teckiting_system-main/modification.action_window"/>
+    <menuitem name="Server to list" id="custom/teckiting_system-main/modification" parent="custom/teckiting_system-main/modification.menu_2"
+              action="custom/teckiting_system-main/modification.action_server"/>
+-->
+
+<!--        Extending Search VIew with FILTERS and GROUP BY  -->
+
+    <record id="project_task_search_inherited_adding_filters" model="ir.ui.view">
+        <field name="name">project.task.search.inherited.adding.filters</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/filter[@name='inactive']" position="after">
+
+<!--                <filter name="Submitted State" string="Submitted State" domain="[('state','=','Submitted')]"  />-->
+<!--                <filter name="Approved State" string="Approved State" domain="[('state','=','Approved')]"  />-->
+<!--                <filter name="Rejected State" string="Rejected State" domain="[('state','=','Rejected')]"  />-->
+
+                <group string="Group By" >
+                     <filter name="groupby_task_category" string="Project Task Categories" context = "{'group_by': 'task_category'}"  />
+
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--Adding  Task Category  in the Project VIew-->
+
+
+        <!--  Add Timesheet Type  and  State Fields/Columns in the Timesheet Tree View  -->
+
+    <record id="project_task_tree_inherit_task_category_Added" model="ir.ui.view">
+        <field name="name">project.task.tree.inherit.task.category.Added</field>
+        <field name="model">project.task</field>
+<!--        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='project_id']" position="after">
+
+                <field name="project_task_category_id"  readonly="True"  />
+
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+  </data>
+</odoo>
